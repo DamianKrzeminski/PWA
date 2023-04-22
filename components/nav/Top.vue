@@ -15,6 +15,9 @@
         <div class="navElement">
             <NuxtLink :to="'/products/' + name"  class="item">Products</NuxtLink>
         </div>
+        <div class="navElement">
+            <NuxtLink to="/nasa/"  class="item">Nasa</NuxtLink>
+        </div>
     </div>
 </template>
 
