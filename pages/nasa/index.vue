@@ -1,6 +1,8 @@
 <template>
     <div>
-        <h1>Nasa</h1>
+        <h1>Nasa {{ message }} </h1>
+        <input type="text" v-model="message" placeholder="search...">
+        <button @click="$event = find()">Search</button>
         <div class="img-nasa-box">
             <img class="image-nasa" :src="value.links[0].href" v-for="(value, index) in dataArr" :key="index"/>
         </div>
@@ -12,16 +14,20 @@ import axios from "axios";
 export default {
     name: "index",
     created(){
-        this.fetchData()
+        this.fetchData(this.message)
     },
     data(){
         return{
-            dataArr: []
+            dataArr: [],
+            message: "sun"
         }
     },
     methods:{
-        async fetchData(){
-            await axios.get('https://images-api.nasa.gov/search?q=sun')
+        find(){
+            this.fetchData(this.message);
+        },
+        async fetchData(search){
+            await axios.get('https://images-api.nasa.gov/search?q=' + search)
             .then(res => {
                 this.dataArr = res.data.collection.items;
             })
