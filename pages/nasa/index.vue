@@ -1,10 +1,18 @@
 <template>
     <div>
-        <h1>Nasa {{ lookingForItem }} </h1>
-        <input type="text" v-model="lookingForItem" placeholder="search...">
-        <button @click="$event = find()">Search</button>
+        <div class="search-box">
+            <h1>Nasa - {{ lookingForItem }} </h1>
+            <div class="searcher">
+                <input type="text" v-model="lookingForItem" placeholder="search...">
+                <button @click="$event = find()">Search</button>
+            </div>
+        </div>
         <div class="img-nasa-box">
-            <img class="image-nasa" @click="$event = makeBigger()" :src="value.links[0].href" v-for="(value, index) in dataArr" :key="index"/>
+            <template v-for="(value) in dataArr">
+                <template v-for="(link, index) in value.links">
+                    <img v-if="index === 0" @click="setModal(link.href)" class="image-nasa" :src="link.href" :data-indec="index"/>
+                </template>
+            </template>
         </div>
     </div>
 </template>
@@ -26,9 +34,6 @@ export default {
         find(){
             this.fetchData(this.lookingForItem);
         },
-        makeBigger(){
-            
-        },
         async fetchData(search){
             await axios.get('https://images-api.nasa.gov/search?q=' + search)
             .then(res => {
@@ -37,7 +42,14 @@ export default {
             .catch(error => {
                 console.log(error)
             })
-        }
+        },
+        setModal(value) {
+            const data = {
+                state: true,
+                content: value
+            }
+            this.$nuxt.$emit('runModal', data);
+        },
     }
 }
 </script>
@@ -55,5 +67,20 @@ export default {
     height: 100px;
     object-fit: cover;
     padding: 5px;
+}
+
+.image-nasa:hover{
+    border: 10px solid royalblue;
+}
+
+.searcher{
+    display: flex;
+    justify-content: center;
+}
+
+.search-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 </style>
